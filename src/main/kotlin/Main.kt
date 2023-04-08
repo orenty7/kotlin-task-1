@@ -31,19 +31,19 @@ fun <T> List<T>.countEqualElements(): List<Pair<T, Int>> {
 }
 
 /** Creates csv statistics report */
-fun csvReport(totalSentences: Int, distribution: List<Pair<Int, Int>>, out: PrintWriter) {
-    out.println("Всего предложений:, $totalSentences")
-    out.println()
-    out.println("Слов в предложении, Количество предложений")
+fun csvReport(totalSentences: Int, distribution: List<Pair<Int, Int>>, out: Appendable) {
+    out.append("Всего предложений:, $totalSentences\n")
+    out.append("\n")
+    out.append("Слов в предложении, Количество предложений\n")
     for ((wordsInSentence, nSentences) in distribution)
-        out.println("$wordsInSentence, $nSentences")
+        out.append("$wordsInSentence, $nSentences\n")
 }
 
 /** Creates human-friendly statistics report. Not intended to be parsed by computer */
-fun humanFriendlyReport(totalSentences: Int, distribution: List<Pair<Int, Int>>, out: PrintWriter) {
-    out.println("Всего предложений: $totalSentences")
+fun humanFriendlyReport(totalSentences: Int, distribution: List<Pair<Int, Int>>, out: Appendable) {
+    out.append("Всего предложений: $totalSentences\n")
     for ((wordsInSentence, nSentences) in distribution)
-        out.println("Слов в предложении: $wordsInSentence. Количество таких предложений: $nSentences")
+        out.append("Слов в предложении: $wordsInSentence. Количество таких предложений: $nSentences\n")
 }
 
 
@@ -58,7 +58,6 @@ fun main(args: Array<String>) {
     val sentenceSizes = text.sentences.map { it.words.size }
 
     val distribution = sentenceSizes.countEqualElements()
-
 
     if(args.size == 2) {
         val out = File(args[1]).printWriter()
