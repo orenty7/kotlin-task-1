@@ -1,5 +1,4 @@
 import java.io.File
-import java.io.PrintWriter
 import kotlin.system.exitProcess
 
 // End of sentence is '.' or '?' or '!' (possibly few of them)
@@ -27,7 +26,7 @@ fun <T> List<T>.countEqualElements(): List<Pair<T, Int>> {
     for (element in this)
          stats[element] = (stats[element] ?: 0) + 1
 
-    return stats.toList().sortedBy { (item, occurs) -> -occurs }
+    return stats.toList().sortedByDescending { it.second }
 }
 
 /** Creates csv statistics report */
@@ -59,13 +58,12 @@ fun main(args: Array<String>) {
 
     val distribution = sentenceSizes.countEqualElements()
 
-    if(args.size == 2) {
-        val out = File(args[1]).printWriter()
-        csvReport(totalSentences, distribution, out)
-        out.close()
-    } else {
-        val out = PrintWriter(System.out)
-        humanFriendlyReport(totalSentences, distribution, out)
-        out.close()
+    when (val filename = args.getOrNull(1)) {
+        null -> humanFriendlyReport (totalSentences, distribution, System.out)
+        else -> File(filename).writer().use {
+            csvReport(totalSentences, distribution, it)
+        }
     }
+
+
 }
